@@ -14,15 +14,15 @@ body{font-family:Arial;background:#f4f6f8;margin:0}
 .cards{display:flex;gap:15px;flex-wrap:wrap}
 .card{background:#fff;padding:18px;border-radius:12px;min-width:180px;box-shadow:0 2px 8px #0001}
 table{width:100%;table-layout:fixed;border-collapse:collapse;background:#fff;margin-top:20px}
-th,td{padding:10px;border-bottom:1px solid #eee;text-align:center;vertical-align:middle;box-sizing:border-box}
-th{background:#eef1f5}
+th,td{padding:5px 4px;border-bottom:1px solid #eee;text-align:center;vertical-align:middle;box-sizing:border-box;line-height:1.2;font-size:13px}
+th{background:#eef1f5;font-size:12px}
 .online{color:#16843a;font-weight:bold}
 .offline{color:#c62828;font-weight:bold}
 .warn{color:#b26a00;font-weight:bold}
 .limit-reached td{background:#ffc7c7 !important;color:#8b0000;font-weight:bold;border-bottom:1px solid #ff8a8a}
 .disk-warning{background:#fff3b0 !important;color:#8a6d00 !important;font-weight:bold}
-.btn{padding:7px 11px;border-radius:6px;background:#172033;color:#fff;text-decoration:none;display:inline-block;margin:2px}
-.services-cell{white-space:nowrap;font-size:13px}
+.btn{padding:5px 8px;border-radius:6px;background:#172033;color:#fff;text-decoration:none;display:inline-block;margin:1px;font-size:12px}
+.services-cell{white-space:nowrap;font-size:12px}
 .server-name{word-break:break-word}
 .refresh-bar{margin:15px 0;display:flex;align-items:center;gap:10px}
 </style>
