@@ -24,7 +24,8 @@ th{background:#eef1f5;font-size:13px}
 .btn{padding:7px 10px;border-radius:6px;background:#172033;color:#fff;text-decoration:none;display:inline-block;margin:1px;font-size:12px;white-space:nowrap}
 .services-cell{white-space:nowrap;font-size:12px}
 .server-name{word-break:break-word}
-.action-cell{white-space:nowrap}
+.last-check{white-space:nowrap;font-size:12px;direction:ltr}
+.action-cell{white-space:nowrap;min-width:125px}
 .refresh-bar{margin:15px 0;display:flex;align-items:center;gap:10px}
 </style>
 <div class="nav"><div class="wrap"><b>WHM Server Monitor</b><a style="color:#fff;float:left" href="logout.php">خروج</a></div></div>
@@ -40,7 +41,7 @@ th{background:#eef1f5;font-size:13px}
 <p><a class="btn" href="server_form.php">+ إضافة سيرفر</a></p>
 <table>
 <thead><tr>
-<th style="width:4%">#</th><th style="width:11%">السيرفر</th><th style="width:9%">الحالة</th><th style="width:6%">المواقع</th><th style="width:6%">Warning</th><th style="width:6%">Limit</th><th style="width:6%">Load</th><th style="width:6%">RAM</th><th style="width:6%">Disk</th><th style="width:7%">Backup</th><th style="width:13%">Services</th><th style="width:10%">آخر فحص</th><th style="width:10%">إجراء</th>
+<th style="width:4%">#</th><th style="width:11%">السيرفر</th><th style="width:8%">الحالة</th><th style="width:6%">المواقع</th><th style="width:6%">Warning</th><th style="width:6%">Limit</th><th style="width:6%">Load</th><th style="width:6%">RAM</th><th style="width:6%">Disk</th><th style="width:7%">Backup</th><th style="width:16%">Services</th><th style="width:10%">آخر فحص</th><th style="width:12%">إجراء</th>
 </tr></thead>
 <tbody>
 <?php foreach($servers as $s):
@@ -64,13 +65,8 @@ $backupThreshold=(float)($config['monitor']['backup_threshold'] ?? 90);
 <td><?=isset($m['ram_percent'])?$m['ram_percent'].'%':'-'?></td>
 <td class="<?=$diskPercent !== null && $diskPercent >= 90 ? 'disk-warning' : ''?>"><?= $diskPercent !== null ? $diskPercent.'%' : '-' ?></td>
 <td class="<?=$backupPercent !== null && $backupPercent >= $backupThreshold ? 'disk-warning' : ''?>"><?= $backupPercent !== null ? $backupPercent.'%' : '-' ?></td>
-<td class="services-cell">
-Apache <?=in_array(($m['apache_status']??''),['active','enabled'],true)?'🟢':'🔴'?>
-MySQL <?=in_array(($m['mysql_status']??''),['active','enabled'],true)?'🟢':'🔴'?>
-DNS <?=in_array(($m['dns_status']??''),['active','enabled'],true)?'🟢':'🔴'?>
-Exim <?=in_array(($m['exim_status']??''),['active','enabled'],true)?'🟢':'🔴'?>
-</td>
-<td><?=htmlspecialchars($s['last_checked_at']??'-')?></td>
+<td class="services-cell">Apache <?=in_array(($m['apache_status']??''),['active','enabled'],true)?'🟢':'🔴'?> MySQL <?=in_array(($m['mysql_status']??''),['active','enabled'],true)?'🟢':'🔴'?> DNS <?=in_array(($m['dns_status']??''),['active','enabled'],true)?'🟢':'🔴'?> Exim <?=in_array(($m['exim_status']??''),['active','enabled'],true)?'🟢':'🔴'?></td>
+<td class="last-check"><?=htmlspecialchars($s['last_checked_at']??'-')?></td>
 <td class="action-cell">
 <a class="btn" href="server_form.php?id=<?=$s['id']?>">تعديل</a>
 <a class="btn" style="background:#c62828" href="delete_server.php?id=<?=$s['id']?>" onclick="return confirm('هل أنت متأكد من حذف السيرفر <?=htmlspecialchars($s['name'],ENT_QUOTES)?> ؟\nسيتم حذف بيانات المراقبة والتنبيهات الخاصة به أيضًا.');">حذف</a>
