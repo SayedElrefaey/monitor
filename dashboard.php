@@ -14,16 +14,17 @@ body{font-family:Arial;background:#f4f6f8;margin:0}
 .cards{display:flex;gap:15px;flex-wrap:wrap}
 .card{background:#fff;padding:18px;border-radius:12px;min-width:180px;box-shadow:0 2px 8px #0001}
 table{width:100%;table-layout:fixed;border-collapse:collapse;background:#fff;margin-top:20px}
-th,td{padding:2px 3px;border-bottom:1px solid #eee;text-align:center;vertical-align:middle;box-sizing:border-box;line-height:1.1;font-size:12px;height:26px}
-th{background:#eef1f5;font-size:11px;height:24px}
+th,td{padding:10px;border-bottom:1px solid #eee;text-align:center;vertical-align:middle;box-sizing:border-box;line-height:1.2;font-size:13px}
+th{background:#eef1f5;font-size:12px}
 .online{color:#16843a;font-weight:bold}
 .offline{color:#c62828;font-weight:bold}
 .warn{color:#b26a00;font-weight:bold}
 .limit-reached td{background:#ffc7c7 !important;color:#8b0000;font-weight:bold;border-bottom:1px solid #ff8a8a}
 .disk-warning{background:#fff3b0 !important;color:#8a6d00 !important;font-weight:bold}
-.btn{padding:3px 6px;border-radius:5px;background:#172033;color:#fff;text-decoration:none;display:inline-block;margin:1px;font-size:11px}
-.services-cell{white-space:nowrap;font-size:11px}
+.btn{padding:7px 11px;border-radius:6px;background:#172033;color:#fff;text-decoration:none;display:inline-block;margin:2px;font-size:12px}
+.services-cell{white-space:nowrap;font-size:12px}
 .server-name{word-break:break-word}
+.action-cell{white-space:nowrap}
 .refresh-bar{margin:15px 0;display:flex;align-items:center;gap:10px}
 </style>
 <div class="nav"><div class="wrap"><b>WHM Server Monitor</b><a style="color:#fff;float:left" href="logout.php">خروج</a></div></div>
@@ -39,7 +40,7 @@ th{background:#eef1f5;font-size:11px;height:24px}
 <p><a class="btn" href="server_form.php">+ إضافة سيرفر</a></p>
 <table>
 <thead><tr>
-<th style="width:4%">#</th><th style="width:12%">السيرفر</th><th style="width:9%">الحالة</th><th style="width:7%">المواقع</th><th style="width:7%">Warning</th><th style="width:7%">Limit</th><th style="width:7%">Load</th><th style="width:7%">RAM</th><th style="width:7%">Disk</th><th style="width:7%">Backup</th><th style="width:20%">Services</th><th style="width:8%">آخر فحص</th><th style="width:8%">إجراء</th>
+<th style="width:4%">#</th><th style="width:12%">السيرفر</th><th style="width:9%">الحالة</th><th style="width:7%">المواقع</th><th style="width:7%">Warning</th><th style="width:7%">Limit</th><th style="width:7%">Load</th><th style="width:7%">RAM</th><th style="width:7%">Disk</th><th style="width:7%">Backup</th><th style="width:16%">Services</th><th style="width:7%">آخر فحص</th><th style="width:10%">إجراء</th>
 </tr></thead>
 <tbody>
 <?php foreach($servers as $s):
@@ -70,7 +71,7 @@ DNS <?=in_array(($m['dns_status']??''),['active','enabled'],true)?'🟢':'🔴'?
 Exim <?=in_array(($m['exim_status']??''),['active','enabled'],true)?'🟢':'🔴'?>
 </td>
 <td><?=htmlspecialchars($s['last_checked_at']??'-')?></td>
-<td>
+<td class="action-cell">
 <a class="btn" href="server_form.php?id=<?=$s['id']?>">تعديل</a>
 <a class="btn" style="background:#c62828" href="delete_server.php?id=<?=$s['id']?>" onclick="return confirm('هل أنت متأكد من حذف السيرفر <?=htmlspecialchars($s['name'],ENT_QUOTES)?> ؟\nسيتم حذف بيانات المراقبة والتنبيهات الخاصة به أيضًا.');">حذف</a>
 </td>
