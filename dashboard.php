@@ -14,14 +14,14 @@ body{font-family:Arial;background:#f4f6f8;margin:0}
 .cards{display:flex;gap:15px;flex-wrap:wrap}
 .card{background:#fff;padding:18px;border-radius:12px;min-width:180px;box-shadow:0 2px 8px #0001}
 table{width:100%;table-layout:fixed;border-collapse:collapse;background:#fff;margin-top:20px}
-th,td{padding:10px;border-bottom:1px solid #eee;text-align:center;vertical-align:middle;box-sizing:border-box;line-height:1.2;font-size:13px}
-th{background:#eef1f5;font-size:12px}
+th,td{padding:10px 7px;border-bottom:1px solid #eee;text-align:center;vertical-align:middle;box-sizing:border-box;line-height:1.2;font-size:13px}
+th{background:#eef1f5;font-size:13px}
 .online{color:#16843a;font-weight:bold}
 .offline{color:#c62828;font-weight:bold}
 .warn{color:#b26a00;font-weight:bold}
 .limit-reached td{background:#ffc7c7 !important;color:#8b0000;font-weight:bold;border-bottom:1px solid #ff8a8a}
 .disk-warning{background:#fff3b0 !important;color:#8a6d00 !important;font-weight:bold}
-.btn{padding:7px 11px;border-radius:6px;background:#172033;color:#fff;text-decoration:none;display:inline-block;margin:2px;font-size:12px}
+.btn{padding:7px 10px;border-radius:6px;background:#172033;color:#fff;text-decoration:none;display:inline-block;margin:1px;font-size:12px;white-space:nowrap}
 .services-cell{white-space:nowrap;font-size:12px}
 .server-name{word-break:break-word}
 .action-cell{white-space:nowrap}
@@ -40,7 +40,7 @@ th{background:#eef1f5;font-size:12px}
 <p><a class="btn" href="server_form.php">+ إضافة سيرفر</a></p>
 <table>
 <thead><tr>
-<th style="width:4%">#</th><th style="width:12%">السيرفر</th><th style="width:9%">الحالة</th><th style="width:7%">المواقع</th><th style="width:7%">Warning</th><th style="width:7%">Limit</th><th style="width:7%">Load</th><th style="width:7%">RAM</th><th style="width:7%">Disk</th><th style="width:7%">Backup</th><th style="width:16%">Services</th><th style="width:7%">آخر فحص</th><th style="width:10%">إجراء</th>
+<th style="width:4%">#</th><th style="width:11%">السيرفر</th><th style="width:9%">الحالة</th><th style="width:6%">المواقع</th><th style="width:6%">Warning</th><th style="width:6%">Limit</th><th style="width:6%">Load</th><th style="width:6%">RAM</th><th style="width:6%">Disk</th><th style="width:7%">Backup</th><th style="width:13%">Services</th><th style="width:10%">آخر فحص</th><th style="width:10%">إجراء</th>
 </tr></thead>
 <tbody>
 <?php foreach($servers as $s):
