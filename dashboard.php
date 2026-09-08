@@ -42,7 +42,7 @@ th{background:#eef1f5;font-size:15px}
 <p><a class="btn" href="server_form.php">+ إضافة سيرفر</a></p>
 <table>
 <thead><tr>
-<th style="width:4%">#</th><th style="width:11%">السيرفر</th><th style="width:8%">الحالة</th><th style="width:6%">المواقع</th><th style="width:6%">Warning</th><th style="width:6%">Limit</th><th style="width:6%">Load</th><th style="width:6%">RAM</th><th style="width:6%">Disk</th><th style="width:7%">Backup</th><th style="width:16%">Services</th><th style="width:8%">آخر فحص</th><th style="width:10%">إجراء</th>
+<th style="width:4%">#</th><th style="width:10%">السيرفر</th><th style="width:8%">الحالة</th><th style="width:6%">المواقع</th><th style="width:6%">Warning</th><th style="width:6%">Limit</th><th style="width:6%">Load</th><th style="width:6%">RAM</th><th style="width:6%">Disk</th><th style="width:7%">Backup</th><th style="width:15%">Services</th><th style="width:10%">آخر فحص</th><th style="width:10%">إجراء</th>
 </tr></thead>
 <tbody>
 <?php foreach($servers as $s):
