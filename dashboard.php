@@ -13,8 +13,9 @@ body{font-family:Arial;background:#f4f6f8;margin:0}
 .wrap{max-width:1500px;margin:auto;padding:20px}
 .cards{display:flex;gap:15px;flex-wrap:wrap}
 .card{background:#fff;padding:18px;border-radius:12px;min-width:180px;box-shadow:0 2px 8px #0001}
-table{width:100%;table-layout:fixed;border-collapse:collapse;background:#fff;margin-top:20px}
-th,td{padding:10px 7px;border-bottom:1px solid #eee;text-align:center;vertical-align:middle;box-sizing:border-box;line-height:1.2;font-size:15px}
+.table-wrap{width:100%;overflow-x:auto;overflow-y:hidden;margin-top:20px;background:#fff}
+table{width:100%;min-width:1500px;table-layout:auto;border-collapse:collapse;background:#fff;margin-top:0}
+th,td{padding:10px 7px;border-bottom:1px solid #eee;text-align:center;vertical-align:middle;box-sizing:border-box;line-height:1.2;font-size:15px;white-space:nowrap}
 th{background:#eef1f5;font-size:15px}
 .online{color:#16843a;font-weight:bold}
 .offline{color:#c62828;font-weight:bold}
@@ -22,10 +23,11 @@ th{background:#eef1f5;font-size:15px}
 .limit-reached td{background:#ffc7c7 !important;color:#8b0000;font-weight:bold;border-bottom:1px solid #ff8a8a}
 .disk-warning{background:#fff3b0 !important;color:#8a6d00 !important;font-weight:bold}
 .btn{padding:7px 10px;border-radius:6px;background:#172033;color:#fff;text-decoration:none;display:inline-block;margin:1px;font-size:14px;white-space:nowrap}
-.services-cell{white-space:nowrap;font-size:14px}
-.server-name{word-break:break-word}
-.last-check{white-space:nowrap;font-size:14px;direction:ltr}
-.action-cell{white-space:nowrap;min-width:145px}
+.services-cell{white-space:nowrap;font-size:14px;min-width:280px}
+.server-name{word-break:break-word;white-space:normal;min-width:130px}
+.last-check{white-space:nowrap;font-size:14px;direction:ltr;min-width:145px}
+.action-cell{white-space:nowrap;min-width:150px}
+.action-cell .btn{margin-left:3px;margin-right:3px}
 .refresh-bar{margin:15px 0;display:flex;align-items:center;gap:10px}
 </style>
 <div class="nav"><div class="wrap"><b>WHM Server Monitor</b><a style="color:#fff;float:left" href="logout.php">خروج</a></div></div>
@@ -39,9 +41,10 @@ th{background:#eef1f5;font-size:15px}
 </div>
 <div class="cards"><div class="card">السيرفرات <b><?=count($servers)?></b></div><div class="card">Online <b><?=$online?></b></div><div class="card">Offline <b><?=$offline?></b></div><div class="card">إجمالي المواقع <b><?=number_format($total)?></b></div></div>
 <p><a class="btn" href="server_form.php">+ إضافة سيرفر</a></p>
+<div class="table-wrap">
 <table>
 <thead><tr>
-<th style="width:4%">#</th><th style="width:10%">السيرفر</th><th style="width:8%">الحالة</th><th style="width:6%">المواقع</th><th style="width:6%">Warning</th><th style="width:6%">Limit</th><th style="width:6%">Load</th><th style="width:6%">RAM</th><th style="width:6%">Disk</th><th style="width:7%">Backup</th><th style="width:15%">Services</th><th style="width:10%">آخر فحص</th><th style="width:10%">إجراء</th>
+<th style="width:55px">#</th><th style="width:135px">السيرفر</th><th style="width:110px">الحالة</th><th style="width:85px">المواقع</th><th style="width:90px">Warning</th><th style="width:85px">Limit</th><th style="width:85px">Load</th><th style="width:85px">RAM</th><th style="width:85px">Disk</th><th style="width:95px">Backup</th><th style="width:280px">Services</th><th style="width:155px">آخر فحص</th><th style="width:155px">إجراء</th>
 </tr></thead>
 <tbody>
 <?php foreach($servers as $s):
@@ -75,6 +78,7 @@ $backupThreshold=(float)($config['monitor']['backup_threshold'] ?? 90);
 <?php endforeach;?>
 </tbody>
 </table>
+</div>
 </div>
 <script>
 (function(){
