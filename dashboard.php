@@ -14,7 +14,7 @@ body{font-family:Arial;background:#f4f6f8;margin:0}
 .cards{display:flex;gap:15px;flex-wrap:wrap}
 .card{background:#fff;padding:18px;border-radius:12px;min-width:180px;box-shadow:0 2px 8px #0001}
 table{width:100%;table-layout:fixed;border-collapse:collapse;background:#fff;margin-top:20px}
-th,td{padding:10px 7px;border-bottom:1px solid #eee;text-align:center;vertical-align:middle;box-sizing:border-box;line-height:1.2;font-size:15px}
+th,td{padding:10px 7px;border-bottom:1px solid #eee;text-align:center;vertical-align:middle;box-sizing:border-box;line-height:1.2;font-size:15px;overflow:hidden}
 th{background:#eef1f5;font-size:15px}
 .online{color:#16843a;font-weight:bold}
 .offline{color:#c62828;font-weight:bold}
@@ -22,11 +22,11 @@ th{background:#eef1f5;font-size:15px}
 .limit-reached td{background:#ffc7c7 !important;color:#8b0000;font-weight:bold;border-bottom:1px solid #ff8a8a}
 .disk-warning{background:#fff3b0 !important;color:#8a6d00 !important;font-weight:bold}
 .btn{padding:7px 10px;border-radius:6px;background:#172033;color:#fff;text-decoration:none;display:inline-block;margin:1px;font-size:14px;white-space:nowrap}
-.services-cell{font-size:14px;line-height:1.25;white-space:normal}
+.services-cell{font-size:14px;line-height:1.25;white-space:normal;overflow-wrap:anywhere}
 .server-name{word-break:break-word}
-.last-check{font-size:14px;line-height:1.25;word-break:break-word}
-.action-cell{white-space:nowrap}
-.action-cell .btn{margin-left:3px;margin-right:3px}
+.last-check{font-size:14px;line-height:1.25;overflow-wrap:anywhere;direction:ltr}
+.action-cell{white-space:nowrap;overflow:visible}
+.action-cell .btn{margin-left:2px;margin-right:2px}
 .refresh-bar{margin:15px 0;display:flex;align-items:center;gap:10px}
 </style>
 <div class="nav"><div class="wrap"><b>WHM Server Monitor</b><a style="color:#fff;float:left" href="logout.php">خروج</a></div></div>
