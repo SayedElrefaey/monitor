@@ -32,10 +32,82 @@ function decrypt_secret($encoded){
  $plain=openssl_decrypt(substr($raw,28),'aes-256-gcm',crypto_key(),OPENSSL_RAW_DATA,substr($raw,0,12),substr($raw,12,16));
  if($plain===false) throw new RuntimeException('Secret decrypt failed');return $plain;
 }
-function telegram_send($text){
- global $config;$token=$config['telegram']['bot_token']??'';$chat=$config['telegram']['chat_id']??'';
+
+function telegram_alert_enabled(string $type): bool
+{
+    global $pdo;
+
+    static $settings = null;
+
+    if ($settings === null) {
+        $st = $pdo->query("SELECT * FROM monitor_settings WHERE id=1 LIMIT 1");
+        $settings = $st->fetch() ?: [];
+    }
+
+    if (empty($settings['telegram_enabled'])) {
+        return false;
+    }
+
+    $map = [
+        'offline'         => 'alert_server_offline',
+        'server_offline'  => 'alert_server_offline',
+        'online'          => 'alert_server_online',
+        'server_online'   => 'alert_server_online',
+        'service_apache'  => 'alert_apache',
+        'service_mysql'   => 'alert_mysql',
+        'service_dns'     => 'alert_dns',
+        'service_exim'    => 'alert_exim',
+        'sites_warning'   => 'alert_sites_warning',
+        'sites_hard'      => 'alert_sites_hard',
+        'disk_high'       => 'alert_disk_high',
+        'ram_high'        => 'alert_ram_high',
+        'load_high'       => 'alert_load_high',
+    ];
+
+    if (!isset($map[$type])) {
+        return true;
+    }
+
+    return !empty($settings[$map[$type]]);
+}
+
+function telegram_send($text, string $type = ''){
+ global $pdo;
+
+ if ($type !== '' && !telegram_alert_enabled($type)) {
+     return false;
+ }
+
+ $st=$pdo->query("SELECT telegram_bot_token_enc, telegram_chat_id, telegram_enabled FROM monitor_settings WHERE id=1 LIMIT 1");
+ $settings=$st->fetch() ?: [];
+
+ if(empty($settings['telegram_enabled']))return false;
+ if(empty($settings['telegram_bot_token_enc'])||empty($settings['telegram_chat_id']))return false;
+
+ try{
+     $token=decrypt_secret($settings['telegram_bot_token_enc']);
+ }catch(Throwable $e){
+     return false;
+ }
+
+ $chat=trim((string)$settings['telegram_chat_id']);
  if(!$token||!$chat)return false;
+
  $ch=curl_init("https://api.telegram.org/bot".rawurlencode($token)."/sendMessage");
- curl_setopt_array($ch,[CURLOPT_POST=>true,CURLOPT_POSTFIELDS=>http_build_query(['chat_id'=>$chat,'text'=>$text]),CURLOPT_RETURNTRANSFER=>true,CURLOPT_TIMEOUT=>10]);
- curl_exec($ch);$ok=curl_getinfo($ch,CURLINFO_HTTP_CODE)===200;curl_close($ch);return $ok;
+ curl_setopt_array($ch,[
+     CURLOPT_POST=>true,
+     CURLOPT_POSTFIELDS=>http_build_query(['chat_id'=>$chat,'text'=>$text]),
+     CURLOPT_RETURNTRANSFER=>true,
+     CURLOPT_CONNECTTIMEOUT=>5,
+     CURLOPT_TIMEOUT=>10,
+     CURLOPT_SSL_VERIFYPEER=>true,
+     CURLOPT_SSL_VERIFYHOST=>2
+ ]);
+ $body=curl_exec($ch);
+ $httpCode=curl_getinfo($ch,CURLINFO_HTTP_CODE);
+ curl_close($ch);
+
+ if($body===false||$httpCode!==200)return false;
+ $result=json_decode($body,true);
+ return is_array($result)&&!empty($result['ok']);
 }
