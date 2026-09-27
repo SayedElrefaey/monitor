@@ -1,0 +1,49 @@
+name: Build Android APK
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'android/whm-monitor-android-v2/**'
+      - '.github/workflows/android-apk.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build-apk:
+    name: Build WHM Monitor APK
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: android/whm-monitor-android-v2
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Generate Android project
+        run: flutter create --platforms=android .
+
+      - name: Get dependencies
+        run: flutter pub get
+
+      - name: Build release APK
+        run: flutter build apk --release
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: whm-monitor-android-apk
+          path: android/whm-monitor-android-v2/build/app/outputs/flutter-apk/app-release.apk
+          if-no-files-found: error
+          retention-days: 30
