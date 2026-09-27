@@ -34,6 +34,28 @@ jobs:
       - name: Generate Android project
         run: flutter create --platforms=android .
 
+      - name: Enable Internet permission for release
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          manifest = Path("android/app/src/main/AndroidManifest.xml")
+          text = manifest.read_text(encoding="utf-8")
+
+          permission = '<uses-permission android:name="android.permission.INTERNET"/>'
+
+          if permission not in text:
+              marker = '<manifest xmlns:android="http://schemas.android.com/apk/res/android">'
+              if marker not in text:
+                  raise SystemExit("AndroidManifest.xml manifest marker not found")
+              text = text.replace(marker, marker + "\n\n    " + permission, 1)
+              manifest.write_text(text, encoding="utf-8")
+
+          print("INTERNET permission enabled in release manifest")
+
+          PY
+
       - name: Get dependencies
         run: flutter pub get
 
