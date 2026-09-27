@@ -9,7 +9,7 @@ if (!file_exists($configFile)) {
     echo json_encode([
         'status' => 'error',
         'message' => 'config.php not found'
-    ], JSON_UNESCAPED_UNICODE);
+    ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
 
     exit;
 }
@@ -17,7 +17,6 @@ if (!file_exists($configFile)) {
 $config = require $configFile;
 
 try {
-
     $dsn = "mysql:host={$config['db']['host']};dbname={$config['db']['name']};charset={$config['db']['charset']}";
 
     $pdo = new PDO(
@@ -30,35 +29,39 @@ try {
             PDO::ATTR_EMULATE_PREPARES => false
         ]
     );
-
 } catch (Throwable $e) {
-
     http_response_code(500);
-
     header('Content-Type: application/json; charset=utf-8');
 
     echo json_encode([
         'status' => 'database_error',
-        'message' => 'Database connection failed',
-        'details' => $e->getMessage()
-    ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+        'message' => 'Database connection failed'
+    ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_INVALID_UTF8_SUBSTITUTE);
 
     exit;
 }
 
-date_default_timezone_set('Africa/Cairo');
+date_default_timezone_set($config['app']['timezone'] ?? 'Africa/Cairo');
 
 function json_response(array $data, int $status = 200): never
 {
     http_response_code($status);
-
     header('Content-Type: application/json; charset=utf-8');
+    header('Cache-Control: no-store, no-cache, must-revalidate');
 
-    echo json_encode(
+    $json = json_encode(
         $data,
-        JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
+        JSON_UNESCAPED_UNICODE |
+        JSON_UNESCAPED_SLASHES |
+        JSON_INVALID_UTF8_SUBSTITUTE
     );
 
+    if ($json === false) {
+        http_response_code(500);
+        $json = '{"status":"error","message":"Failed to encode JSON response"}';
+    }
+
+    echo $json;
     exit;
 }
 
@@ -89,9 +92,7 @@ function jwt_secret(): string
 {
     global $config;
 
-    $secret = trim(
-        (string)($config['api']['jwt_secret'] ?? '')
-    );
+    $secret = trim((string)($config['api']['jwt_secret'] ?? ''));
 
     if ($secret === '') {
         json_response([
@@ -109,7 +110,7 @@ function issue_token(int $userId, int $ttl = 86400): string
         json_encode([
             'alg' => 'HS256',
             'typ' => 'JWT'
-        ])
+        ], JSON_UNESCAPED_SLASHES)
     );
 
     $payload = b64url_encode(
@@ -117,7 +118,7 @@ function issue_token(int $userId, int $ttl = 86400): string
             'sub' => $userId,
             'iat' => time(),
             'exp' => time() + $ttl
-        ])
+        ], JSON_UNESCAPED_SLASHES)
     );
 
     $signature = b64url_encode(
@@ -136,17 +137,14 @@ function get_bearer_token(): ?string
 {
     $header = '';
 
-    // Nginx / PHP-FPM
     if (!empty($_SERVER['HTTP_AUTHORIZATION'])) {
         $header = $_SERVER['HTTP_AUTHORIZATION'];
     }
 
-    // بعض إعدادات السيرفر تمرره بهذا الشكل
     if ($header === '' && !empty($_SERVER['REDIRECT_HTTP_AUTHORIZATION'])) {
         $header = $_SERVER['REDIRECT_HTTP_AUTHORIZATION'];
     }
 
-    // fallback
     if ($header === '' && function_exists('getallheaders')) {
         $headers = getallheaders();
 
@@ -170,17 +168,13 @@ function require_api_user(): int
     $token = get_bearer_token();
 
     if (!$token) {
-        json_response([
-            'status' => 'unauthorized'
-        ], 401);
+        json_response(['status' => 'unauthorized'], 401);
     }
 
     $parts = explode('.', $token);
 
     if (count($parts) !== 3) {
-        json_response([
-            'status' => 'unauthorized'
-        ], 401);
+        json_response(['status' => 'unauthorized'], 401);
     }
 
     [$header, $payload, $signature] = $parts;
@@ -195,17 +189,13 @@ function require_api_user(): int
     );
 
     if (!hash_equals($expectedSignature, $signature)) {
-        json_response([
-            'status' => 'unauthorized'
-        ], 401);
+        json_response(['status' => 'unauthorized'], 401);
     }
 
     $decoded = b64url_decode($payload);
 
     if ($decoded === false) {
-        json_response([
-            'status' => 'unauthorized'
-        ], 401);
+        json_response(['status' => 'unauthorized'], 401);
     }
 
     $data = json_decode($decoded, true);
@@ -216,9 +206,7 @@ function require_api_user(): int
         empty($data['exp']) ||
         (int)$data['exp'] < time()
     ) {
-        json_response([
-            'status' => 'unauthorized'
-        ], 401);
+        json_response(['status' => 'unauthorized'], 401);
     }
 
     return (int)$data['sub'];
