@@ -1,0 +1,16 @@
+name: whm_server_monitor
+description: تطبيق Android لمراقبة سيرفرات WHM عبر API
+publish_to: "none"
+version: 1.0.0+1
+
+environment:
+  sdk: ">=3.4.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  http: ^1.2.2
+  flutter_secure_storage: ^9.2.2
+
+flutter:
+  uses-material-design: true
